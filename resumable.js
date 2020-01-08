@@ -997,19 +997,87 @@
       return(false);
     };
 
+    $.assignBrowseRemovable = function (domNode, isDirectory) {
+      var input;
+      var useFreshInput
+      if (domNode.tagName === 'INPUT' && domNode.type === 'file') {
+        useFreshInput = false
+        input = domNode;
+      } else {
+        useFreshInput = true
+        input = document.createElement('input')
+        input.setAtrribute('type', 'file')
+        input.style.display = 'none'
+        const clickHandler = function() {
+          input.style.opacity = 0
+          input.style.display = 'block'
+          input.focus()
+          input.click()
+          input.style.display = 'none'
+        }
+        domNode.addEventListener('click', clickHandler, false)
+        domNode.appendChild(input) // reverse with domNode.removeChild(input)
+        
+        var maxFiles = $.getOpt('maxFiles');
+        if (typeof (maxFiles) === 'undefined' || maxFiles != 1) {
+          input.setAttribute('multiple', 'multiple');
+        } else {
+          input.removeAttribute('multiple');
+        }
+        if (isDirectory) {
+          input.setAttribute('webkitdirectory', 'webkitdirectory');
+        } else {
+          input.removeAttribute('webkitdirectory');
+        }
+        var fileTypes = $.getOpt('fileType');
+        if (typeof (fileTypes) !== 'undefined' && fileTypes.length >= 1) {
+          input.setAttribute('accept', fileTypes.map(function (e) {
+            e = e.replace(/\s/g, '').toLowerCase();
+            if (e.match(/^[^.][^/]+$/)) {
+              e = '.' + e;
+            }
+            return e;
+          }).join(','));
+        } else {
+          input.removeAttribute('accept');
+        }
+
+        const inputEventListener = function (e) {
+          appendFilesFromFileList(e.target.files, e);
+          var clearInput = $.getOpt('clearInput');
+          if (clearInput) {
+            e.target.value = '';
+          }
+        }
+        // When new files are added, simply append them to the overall list
+        input.addEventListener('change', inputEventListener, false);
+
+        return ([
+          // the extra input created (if any). If this is provided, you need to use yourAssignedBrowseElement.removeChild(thisExtraInputCreated) to unAssignBrowse.
+          useFreshInput ? input : null,
+
+          // You need to remove the click handler on your element you assigned browse to, to unAssignBrowse.
+          clickHandler,
+
+          // the input event listener. If this is provided, you need to remove it from the element you assigned browse to.
+          useFreshInput ? null : inputEventListener
+        ])
+      }
+    }
 
     // PUBLIC METHODS FOR RESUMABLE.JS
     $.assignBrowse = function(domNodes, isDirectory){
-      if(typeof(domNodes.length)=='undefined') domNodes = [domNodes];
+      if (typeof domNodes.length == 'undefined') domNodes = [domNodes];
       $h.each(domNodes, function(domNode) {
         var input;
         if(domNode.tagName==='INPUT' && domNode.type==='file'){
           input = domNode;
         } else {
           input = document.createElement('input');
+          // input.setAttribute('id', inputID)
           input.setAttribute('type', 'file');
           input.style.display = 'none';
-          domNode.addEventListener('click', function(){
+          domNode.addEventListener('click', function() {
             input.style.opacity = 0;
             input.style.display='block';
             input.focus();
@@ -1038,8 +1106,7 @@
             }
             return e;
           }).join(','));
-        }
-        else {
+        } else {
           input.removeAttribute('accept');
         }
         // When new files are added, simply append them to the overall list

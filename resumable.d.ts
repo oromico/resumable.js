@@ -168,6 +168,8 @@ declare namespace Resumable {
     events: Event[];
     version: number;
 
+    assignBrowseRemovable(domNode: Element, isDirectory: boolean): [HTMLInputElement | null, () => void, ((e: any) => void) | null]
+
     /**
      * Assign a browse action to one or more DOM nodes. Pass in true to allow directories to be selected (Chrome only).
      **/
