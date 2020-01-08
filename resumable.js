@@ -1006,7 +1006,7 @@
       } else {
         useFreshInput = true
         input = document.createElement('input')
-        input.setAtrribute('type', 'file')
+        input.setAttribute('type', 'file')
         input.style.display = 'none'
         const clickHandler = function() {
           input.style.opacity = 0
