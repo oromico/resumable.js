@@ -365,6 +365,15 @@ declare namespace Resumable {
      * Returns a boolean indicating whether the file has completed uploading and received a server response.
      **/
     isComplete: () => boolean;
+
+    /**
+     * Allow storing of a custom value, in this case the file's MD5, in order to retrieve it at various callbacks. For internal uses.
+     * 
+     * @author Seiyial
+     * @type {string}
+     * @memberof ResumableFile
+     */
+    customInjectMD5?: string
   }
 
   interface ResumableChunk { }
