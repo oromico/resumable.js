@@ -151,6 +151,15 @@ declare namespace Resumable {
     constructor(options: ConfigurationHash);
 
     /**
+     * defaults to `false`.
+     * - If `true`, chunk `content-type` will be original file type (e.g. application/pdf).
+     * - If `false`, chunk `content-type` will be `application/octet-stream`.
+     * 
+     * @author __[🐬Sayhao L.](https://github.com/Seiyial)__
+     */
+    setChunkTypeFromFile?: boolean;
+
+    /**
      * A boolean value indicator whether or not Resumable.js is supported by the current browser.
      **/
     support: boolean;
