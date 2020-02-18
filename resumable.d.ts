@@ -145,11 +145,6 @@ declare namespace Resumable {
      * Standard CORS requests do not send or set any cookies by default. In order to include cookies as part of the request, you need to set the withCredentials property to true. (Default: false)
      **/
     withCredentials?: boolean;
-  }
-
-  class Resumable {
-    constructor(options: ConfigurationHash);
-
     /**
      * defaults to `false`.
      * - If `true`, chunk `content-type` will be original file type (e.g. application/pdf).
@@ -158,6 +153,10 @@ declare namespace Resumable {
      * @author __[🐬Sayhao L.](https://github.com/Seiyial)__
      */
     setChunkTypeFromFile?: boolean;
+  }
+
+  class Resumable {
+    constructor(options: ConfigurationHash);
 
     /**
      * A boolean value indicator whether or not Resumable.js is supported by the current browser.
